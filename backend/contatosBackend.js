@@ -35,7 +35,7 @@ app.get('/contatos', function(req, res) {
 
 app.post('/contatos', function(req, res) {
   contatos.push(req.body);
-  res.json(true);
+  res.json(req.body);
 });
 
 app.get('/operadoras', function(req, res) {

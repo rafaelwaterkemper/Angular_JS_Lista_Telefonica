@@ -47,10 +47,11 @@
 				contato.data = new Date();
 				//$scope.contatos.push(contato);
 
-				$http.post("http://localhost:3412/contatos", contato).success(function (data, status) {
-					alert("Contato salvo com sucesso.");
+				$http.post("http://localhost:3412/contatos", contato).success(function (data) {
 					delete $scope.contatoForm;
 					$scope.formContato.$setPristine();
+					$scope.contatos.push(data);
+					//carregarContatos();
 				}).error(function (erro) {
 					alert("Erro interno de servidor.")
 				});
