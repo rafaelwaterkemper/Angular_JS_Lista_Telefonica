@@ -28,7 +28,7 @@
 			font-weight: bold;
 		}
 	</style>
-	<script src="lib/angular/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
 	<script src="lib/angular/angular-messages.js"></script>
 	<script src="lib/angular/angular-locale_pt-br.js"></script>
 	<script>
@@ -47,12 +47,12 @@
 				contato.data = new Date();
 				//$scope.contatos.push(contato);
 
-				$http.post("http://localhost:3412/contatos", contato).success(function (data) {
+				$http.post("http://localhost:3412/contatos", contato).then(function (data) {
 					delete $scope.contatoForm;
 					$scope.formContato.$setPristine();
-					$scope.contatos.push(data);
+					$scope.contatos.push(data.data);
 					//carregarContatos();
-				}).error(function (erro) {
+				}, function (erro) {
 					alert("Erro interno de servidor.")
 				});
 			};
@@ -86,19 +86,19 @@
 			};
 
 			let carregarContatos = function () {
-				$http.get("http://localhost:3412/contatos").success(function (data, status) {
-					$scope.contatos = data;
+				$http.get("http://localhost:3412/contatos").then(function (data, status) {
+					$scope.contatos = data.data;
 					console.log($scope.contatos);
-				}).error(function () {
+				}, function () {
 					console.log('Erro interno de servidor.')
 				});
 			};
 
 			let carregarOperadoras = function () {
-				$http.get("http://localhost:3412/operadoras").success(function (data, status) {
-					$scope.operadoras = data;
+				$http.get("http://localhost:3412/operadoras").then(function (data, status) {
+					$scope.operadoras = data.data;
 					console.log($scope.operadoras);
-				}).error(function () {
+				}, function () {
 					console.log('Erro interno de servidor.')
 				});
 			};
@@ -111,13 +111,13 @@
 
 <body ng-controller="listaTelefonicaCtrl">
 	<div class="jumbotron">
-		<h3>{{app + ' ' +(2*4)}}</h3>
+		<h3>{{ app + ' ' + (2 * 4) }}</h3>
 		<input class="form-control" type="text" ng-model="buscar" placeholder="O que você está buscando?">
 		<table ng-show="contatos.length > 0" class="table">
 			<tr>
 				<th></th>
 				<th><a href="#" ng-click="ordenarPor('nome');">Nome<a></th>
-					<th><a href="#" ng-click="ordenarPor('telefone');">Telefone</a></th>
+				<th><a href="#" ng-click="ordenarPor('telefone');">Telefone</a></th>
 				<th>Operadora</th>
 				<th>Data</th>
 				<th></th>
@@ -125,15 +125,15 @@
 			<!--'selecionado negrito': contato.selecionado-->
 			<tr ng-class="{selecionado: contato.selecionado, negrito: contato.selecionado}" ng-repeat="contato in contatos | filter : {nome:buscar || ''} | orderBy:itemOrdenacao:criterioOrdenacao">
 				<td><input type="checkbox" ng-model="contato.selecionado"></td>
-				<td>{{contato.nome}}</td>
-				<td>{{contato.telefone}}</td>
-				<td>{{contato.operadora.nome}}</td>
-				<td>{{contato.data | date:"MMMM EEEE dd/MM/yyyy HH:mm"}}</td>
+				<td>{{ contato.nome }}</td>
+				<td>{{ contato.telefone }}</td>
+				<td>{{ contato.operadora.nome }}</td>
+				<td>{{ contato.data | date:"MMMM EEEE dd/MM/yyyy HH:mm"}}</td>
 				<td>
 					<div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}"></div>
 				</td>
 				<!-- MANEIRA PARA PEGAR CHAVE E VALOR DO OBJETO
-					<td ng-repeat="(key,value) in contato">{{key + ' - ' + value}}</td>-->
+					<td ng-repeat="(key,value) in contato">{{ key + ' - ' + value }}</td>-->
 			</tr>
 		</table>
 		<hr>
@@ -146,7 +146,7 @@
 				Usar locale-pt-br para formatos brasileiros-->
 			<select class="form-control" ng-model="contatoForm.operadora" ng-options="operadora.nome + ' ( ' + (operadora.preco | currency) + ' ) ' group by operadora.categoria for operadora in operadoras">
 				<option value="">Selecione uma operadora</option>
-				</select>
+			</select>
 		</form>
 		<button class="btn btn-success btn-block" ng-disabled="!contatoForm.nome || !contatoForm.telefone" ng-click="adicionarContato(contatoForm)">Adicionar Contato</button>
 		<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-disabled="!isContatoSelecionado(contatos)">Apagar Contato</button><br>
