@@ -1,4 +1,4 @@
-angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($scope, $filter, $http) {
+angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($scope, $filter, contatosAPI, operadorasAPI) {
 
 	$scope.app = "Lista Telefonica";
 	$scope.operadoras = [];
@@ -12,7 +12,7 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 		contato.data = new Date();
 		//$scope.contatos.push(contato);
 
-		$http.post("http://localhost:3412/contatos", contato).then(function (data) {
+		contatosAPI.saveContato(contato).then(function (data) {
 			delete $scope.contatoForm;
 			$scope.formContato.$setPristine();
 			$scope.contatos.push(data.data);
@@ -33,7 +33,6 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 		$scope.contatos = contatos.filter(function (contato) {
 			if (!contato.selecionado) return contato;
 		});
-
 	};
 
 	$scope.isContatoSelecionado = function (contatos) {
@@ -51,7 +50,7 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 	};
 
 	let carregarContatos = function () {
-		$http.get("http://localhost:3412/contatos").then(function (data, status) {
+		contatosAPI.getAllContatos().then(function (data, status) {
 			$scope.contatos = data.data;
 			console.log($scope.contatos);
 		}, function () {
@@ -60,7 +59,7 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 	};
 
 	let carregarOperadoras = function () {
-		$http.get("http://localhost:3412/operadoras").then(function (data, status) {
+		operadorasAPI.getAllOperadoras().then(function (data, status) {
 			$scope.operadoras = data.data;
 			console.log($scope.operadoras);
 		}, function () {
