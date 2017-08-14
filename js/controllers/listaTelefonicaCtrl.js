@@ -1,4 +1,4 @@
-angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($scope, $filter, contatosAPI, operadorasAPI) {
+angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($scope, $filter, contatosAPI, operadorasAPI, serialGenerator) {
 
 	$scope.app = "Lista Telefonica";
 	$scope.operadoras = [];
@@ -12,6 +12,7 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 		contato.data = new Date();
 		//$scope.contatos.push(contato);
 
+		contato.serial = serialGenerator.generate();
 		contatosAPI.saveContato(contato).then(function (data) {
 			delete $scope.contatoForm;
 			$scope.formContato.$setPristine();
@@ -52,7 +53,6 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 	let carregarContatos = function () {
 		contatosAPI.getAllContatos().then(function (data, status) {
 			$scope.contatos = data.data;
-			console.log($scope.contatos);
 		}, function () {
 			console.log('Erro interno de servidor.')
 		});
@@ -61,8 +61,7 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 	let carregarOperadoras = function () {
 		operadorasAPI.getAllOperadoras().then(function (data, status) {
 			$scope.operadoras = data.data;
-			console.log($scope.operadoras);
-		}, function () {
+	}, function () {
 			console.log('Erro interno de servidor.')
 		});
 	};
