@@ -54,7 +54,7 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 		contatosAPI.getAllContatos().then(function (data, status) {
 			$scope.contatos = data.data;
 		}, function () {
-			console.log('Erro interno de servidor.')
+			$scope.error = 'Aconteceu um erro ao carregar os contatos!';
 		});
 	};
 
@@ -62,7 +62,7 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 		operadorasAPI.getAllOperadoras().then(function (data, status) {
 			$scope.operadoras = data.data;
 	}, function () {
-			console.log('Erro interno de servidor.')
+			$scope.error += ' Erro ao carregar as operadoras!';
 		});
 	};
 

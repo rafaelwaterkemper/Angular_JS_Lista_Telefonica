@@ -4,6 +4,7 @@
 	<title>Lista Telefônica</title>
 	<link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/app.css">;
+	<link rel="stylesheet" type="text/css" href="css/ui.css">;
 	<script src="lib/angular/angular.min.js"></script>
 	<script src="lib/angular/angular-messages.js"></script>
 	<script src="js/app.js"></script>
@@ -14,12 +15,17 @@
 	<script src="js/config/serialGeneratorConfig.js"></script>
 	<script src="js/filters/formataCampoNome.filter.js"></script>
 	<script src="js/filters/limitaCampoNome.filter.js"></script>
+	<script src="js/directives/uiAlert.directive.js"></script>
 	<script src="js/config.js"></script>
 </head>
 
 <body ng-controller="listaTelefonicaCtrl">
 	<div class="jumbotron">
-		<h3>{{ app + ' ' + (2 * 4) }}</h3>
+		<h3>{{app}}</h3>
+		<ui-alert title="Ocorreu um erro aqui!">
+			Utilizando transclude
+		</ui-alert>
+		<div ui-alert title="Através do atributo"></div>
 		<input class="form-control" type="text" ng-model="buscar" placeholder="O que você está buscando?">
 		<table ng-show="contatos.length > 0" class="table">
 			<tr>
@@ -35,7 +41,7 @@
 			<tr ng-class="{selecionado: contato.selecionado, negrito: contato.selecionado}" ng-repeat="contato in contatos | filter : {nome:buscar || ''} | orderBy:itemOrdenacao:criterioOrdenacao">
 				<td><input type="checkbox" ng-model="contato.selecionado"></td>
 				<td>{{ contato.serial }}</td>
-				<td>{{ contato.nome | name | limitaNome:10}}</td>
+				<td>{{ contato.nome | name | limitaNome}}</td>
 				<td>{{ contato.telefone }}</td>
 				<td>{{ contato.operadora.nome }}</td>
 				<td>{{ contato.data | date:"MMMM EEEE dd/MM/yyyy HH:mm"}}</td>
