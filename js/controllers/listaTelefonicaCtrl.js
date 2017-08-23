@@ -3,7 +3,10 @@ angular.module('listaTelefonica').controller('listaTelefonicaCtrl', function ($s
 	$scope.app = "Lista Telefonica";
 	$scope.operadoras = [];
 	$scope.contatos = [];
-
+	$scope.contatoForm = {
+		data: 1034218800000
+	}
+	
 	$scope.adicionarContato = function (contato) {
 		//Pra usar assim, retirar os parametros - Deixar de passar no ng-click
 		//$scope.contatos.push({nome:$scope.nome, telefone:$scope.telefone});

@@ -1,101 +1,105 @@
 ﻿<html ng-app="listaTelefonica">
 
 <head>
-	<title>Lista Telefônica</title>
-	<link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="css/app.css">;
-	<link rel="stylesheet" type="text/css" href="css/ui.css">;
-	<script src="lib/angular/angular.min.js"></script>
-	<script src="lib/angular/angular-messages.js"></script>
-	<script src="js/app.js"></script>
-	<script src="js/controllers/listaTelefonicaCtrl.js"></script>
-	<script src="js/services/contatosAPIService.js"></script>
-	<script src="js/services/operadorasAPIService.js"></script>
-	<script src="js/services/serialGeneratorService.js"></script>
-	<script src="js/config/serialGeneratorConfig.js"></script>
-	<script src="js/filters/formataCampoNome.filter.js"></script>
-	<script src="js/filters/limitaCampoNome.filter.js"></script>
-	<script src="js/directives/uiAlert.directive.js"></script>
-	<script src="js/config.js"></script>
+    <title>Lista Telefônica</title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">;
+    <link rel="stylesheet" type="text/css" href="css/ui.css">;
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular/angular-messages.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers/listaTelefonicaCtrl.js"></script>
+    <script src="js/services/contatosAPIService.js"></script>
+    <script src="js/services/operadorasAPIService.js"></script>
+    <script src="js/services/serialGeneratorService.js"></script>
+    <script src="js/config/serialGeneratorConfig.js"></script>
+    <script src="js/filters/formataCampoNome.filter.js"></script>
+    <script src="js/filters/limitaCampoNome.filter.js"></script>
+    <script src="js/directives/uiAlert.directive.js"></script>
+    <script src="js/directives/uiDate.directive.js"></script>
+    <script src="js/config.js"></script>
 </head>
 
 <body ng-controller="listaTelefonicaCtrl">
-	<div class="jumbotron">
-		<h3>{{app}}</h3>
-		<ui-alert title="Ocorreu um erro aqui!">
-			Utilizando transclude
-		</ui-alert>
-		<div ui-alert title="Através do atributo"></div>
-		<input class="form-control" type="text" ng-model="buscar" placeholder="O que você está buscando?">
-		<table ng-show="contatos.length > 0" class="table">
-			<tr>
-				<th></th>
-				<th>Serial</th>
-				<th><a href="#" ng-click="ordenarPor('nome');">Nome<a></th>
-				<th><a href="#" ng-click="ordenarPor('telefone');">Telefone</a></th>
-				<th>Operadora</th>
-				<th>Data</th>
-				<th></th>
-			</tr>
-			<!--'selecionado negrito': contato.selecionado-->
-			<tr ng-class="{selecionado: contato.selecionado, negrito: contato.selecionado}" ng-repeat="contato in contatos | filter : {nome:buscar || ''} | orderBy:itemOrdenacao:criterioOrdenacao">
-				<td><input type="checkbox" ng-model="contato.selecionado"></td>
-				<td>{{ contato.serial }}</td>
-				<td>{{ contato.nome | name | limitaNome}}</td>
-				<td>{{ contato.telefone }}</td>
-				<td>{{ contato.operadora.nome }}</td>
-				<td>{{ contato.data | date:"MMMM EEEE dd/MM/yyyy HH:mm"}}</td>
-				<td>
-					<div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}"></div>
-				</td>
-				<!-- MANEIRA PARA PEGAR CHAVE E VALOR DO OBJETO
-					<td ng-repeat="(key,value) in contato">{{ key + ' - ' + value }}</td>-->
-			</tr>
-		</table>
-		<hr>
-		<form name="formContato">
-			<input class="form-control" type="text" ng-model="contatoForm.nome" name="nome" placeholder="Nome" ng-required="true" ng-minlength="10">
-			<input class="form-control" type="text" ng-model="contatoForm.telefone" name="telefone" placeholder="Telefone" ng-required="true"
-			 ng-pattern="/^\d{4,5}-\d{4}$/">
-			<!--+ ' ( ' + (operadora.valor | currency) + ' ) ' concatenando atributos
-				e usando o currency para setar formatação.
-				Usar locale-pt-br para formatos brasileiros-->
-			<select class="form-control" ng-model="contatoForm.operadora" ng-options="operadora.nome + ' ( ' + (operadora.preco | currency) + ' ) ' group by operadora.categoria for operadora in operadoras">
-				<option value="">Selecione uma operadora</option>
-			</select>
-		</form>
-		<button class="btn btn-success btn-block" ng-disabled="!contatoForm.nome || !contatoForm.telefone" ng-click="adicionarContato(contatoForm)">Adicionar Contato</button>
-		<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-disabled="!isContatoSelecionado(contatos)">Apagar Contato</button><br>
-		<!--invalid é utilizado pra tudo
-				$error.required
-				$error.minlength-->
-		<div ng-messages="formContato.nome.$error" ng-show="formContato.nome.$dirty">
-			<div ng-message="required" class="alert alert-danger">
-				Preencha o campo nome.
-			</div><br>
-		</div>
+    <div class="jumbotron">
+        <h3>{{app}}</h3>
+        <ui-alert title="Ocorreu um erro aqui!">
+            Utilizando transclude
+        </ui-alert>
+        <div ui-alert title="Através do atributo"></div>
+        <div ui-alert></div>
+        <input class="form-control" type="text" ng-model="buscar" placeholder="O que você está buscando?">
+        <table ng-show="contatos.length > 0" class="table">
+            <tr>
+                <th></th>
+                <th>Serial</th>
+                <th><a href="#" ng-click="ordenarPor('nome');">Nome<a></th>
+                <th><a href="#" ng-click="ordenarPor('telefone');">Telefone</a></th>
+                <th>Operadora</th>
+                <th>Data</th>
+                <th></th>
+            </tr>
+            <!--'selecionado negrito': contato.selecionado-->
+            <tr ng-class="{selecionado: contato.selecionado, negrito: contato.selecionado}" ng-repeat="contato in contatos | filter : {nome:buscar || ''} | orderBy:itemOrdenacao:criterioOrdenacao">
+                <td><input type="checkbox" ng-model="contato.selecionado"></td>
+                <td>{{ contato.serial }}</td>
+                <td>{{ contato.nome | name | limitaNome}}</td>
+                <td>{{ contato.telefone }}</td>
+                <td>{{ contato.operadora.nome }}</td>
+                <td>{{ contato.data | date:"MMMM EEEE dd/MM/yyyy HH:mm"}}</td>
+                <td>
+                    <div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}"></div>
+                </td>
+                <!-- MANEIRA PARA PEGAR CHAVE E VALOR DO OBJETO
+                    <td ng-repeat="(key,value) in contato">{{ key + ' - ' + value }}</td>-->
+            </tr>
+        </table>
+        <hr>
+        <form name="formContato">
+            <input class="form-control" type="text" ng-model="contatoForm.nome" name="nome" placeholder="Nome" ng-required="true" ng-minlength="10">
+            <input class="form-control" type="text" ng-model="contatoForm.telefone" name="telefone" placeholder="Telefone" ng-required="true"
+                ng-pattern="/^\d{4,5}-\d{4}$/">
+            <!--+ ' ( ' + (operadora.valor | currency) + ' ) ' concatenando atributos
+                e usando o currency para setar formatação.
+                Usar locale-pt-br para formatos brasileiros-->
+            <h3>{{contatoForm.data}}</h3>
+            <input class="form-control" type="text" ng-model="contatoForm.data" name="data" placeholder="Data" ui-date>
+            <select class="form-control" ng-model="contatoForm.operadora" ng-options="operadora.nome + ' ( ' + (operadora.preco | currency) + ' ) ' group by operadora.categoria for operadora in operadoras">
+                <option value="">Selecione uma operadora</option>
+            </select>
+        </form>
+        <button class="btn btn-success btn-block" ng-disabled="!contatoForm.nome || !contatoForm.telefone" ng-click="adicionarContato(contatoForm)">Adicionar Contato</button>
+        <button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-disabled="!isContatoSelecionado(contatos)">Apagar Contato</button><br>
+        <!--invalid é utilizado pra tudo
+                $error.required
+                $error.minlength-->
+        <div ng-messages="formContato.nome.$error" ng-show="formContato.nome.$dirty">
+            <div ng-message="required" class="alert alert-danger">
+                Preencha o campo nome.
+            </div><br>
+        </div>
 
-		<div class="alert alert-danger" ng-show="formContato.nome.$error.minlength">
-			O campo nome deve ter no mínimo 10 caracteres.
-		</div><br>
-		<div class="alert alert-danger" ng-show="formContato.telefone.$error.required && formContato.telefone.$dirty">
-			Preencha o campo telefone.
-		</div>
-		<div class="alert alert-danger" ng-show="formContato.telefone.$error.pattern">
-			O campo telefone deve ter o formato DDDDD-DDDD.
-		</div>
-		<!-- Exibe caso for true - Serve apenas para mostrar ou não, porém continua o button no dom
-				<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-show="isContatoSelecionado(contatos)">Apagar Contato</button>-->
-		<!--Esconde caso o elemento for true - Serve apenas para mostrar ou não, porém continua o button no dom
-				<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-hide="isContatoSelecionado(contatos)">Apagar Contato</button>-->
-		<!-- Carrega o elemento ou não, dependendo do retorno da função
-				<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-if="isContatoSelecionado(contatos)">Apagar Contato</button>-->
-	</div>
-	<!--Não é permitido no chrome, pois é protocolo file
-		política da mesma origem (Same origem police)
-		chamada ajax
-		-->
-	<div ng-include="'view/footer.html'"></div>
+        <div class="alert alert-danger" ng-show="formContato.nome.$error.minlength">
+            O campo nome deve ter no mínimo 10 caracteres.
+        </div><br>
+        <div class="alert alert-danger" ng-show="formContato.telefone.$error.required && formContato.telefone.$dirty">
+            Preencha o campo telefone.
+        </div>
+        <div class="alert alert-danger" ng-show="formContato.telefone.$error.pattern">
+            O campo telefone deve ter o formato DDDDD-DDDD.
+        </div>
+        <!-- Exibe caso for true - Serve apenas para mostrar ou não, porém continua o button no dom
+                <button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-show="isContatoSelecionado(contatos)">Apagar Contato</button>-->
+        <!--Esconde caso o elemento for true - Serve apenas para mostrar ou não, porém continua o button no dom
+                <button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-hide="isContatoSelecionado(contatos)">Apagar Contato</button>-->
+        <!-- Carrega o elemento ou não, dependendo do retorno da função
+                <button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-if="isContatoSelecionado(contatos)">Apagar Contato</button>-->
+    </div>
+    <!--Não é permitido no chrome, pois é protocolo file
+        política da mesma origem (Same origem police)
+        chamada ajax
+        -->
+    <div ng-include="'view/footer.html'"></div>
 </body>
 
 </html>
